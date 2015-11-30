@@ -12,24 +12,31 @@
 require(dirname(__FILE__).'/../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 
-// page parameters
-//$page    = optional_param('page', 0, PARAM_INT);
-//$perpage = optional_param('perpage', 30, PARAM_INT);    // how many per page
-//$sort    = optional_param('sort', 'timemodified', PARAM_ALPHA);
-//$dir     = optional_param('dir', 'DESC', PARAM_ALPHA);
-
-//debug help
-
-
 admin_externalpage_setup('reportactivitycharts', '', null, '', array('pagelayout'=>'report'));
 echo $OUTPUT->header();
 
-//echo $OUTPUT->heading(get_string('activitycharts', 'report_activitycharts'));
-echo '<h2>Activity Charts</h2>';
+echo $OUTPUT->heading(get_string('activitycharts', 'report_activitycharts'));
 
-// echo '<pre>';
-// var_dump($OUTPUT);
-// echo '</pre>';
+?>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/data.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
 
 
+<?php
+
+
+//global $DB;
+$stuff      = $DB->get_record_sql('SELECT * FROM {user} WHERE id=?', array(2));
+//$otherstuff = $DB->count_records_sql($sql, array $params=null) 
+  /// Get the result of an SQL SELECT COUNT(...) query.
+
+echo '<pre>';
+var_dump($stuff);
+echo '</pre>';
+
+//$table = new html_table();
+//echo html_writer::table($table);
 echo $OUTPUT->footer();
