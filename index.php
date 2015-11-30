@@ -19,7 +19,8 @@ echo $OUTPUT->heading(get_string('activitycharts', 'report_activitycharts'));
 
 ?>
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<?php //certainly not the moodle way to do this part, but will work for now ?>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/data.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
@@ -29,10 +30,21 @@ echo $OUTPUT->heading(get_string('activitycharts', 'report_activitycharts'));
 
 
 global $DB;
-$stuff      = $DB->get_record_sql('SELECT * FROM {user} WHERE id=?', array(2));
+
+//works, but just a test
+//$stuff      = $DB->get_record_sql('SELECT * FROM {user} WHERE id=?', array(2));
 
 //see if you can use below syntax with the query in the comments
-//$result = $DB->get_records_sql('SELECT * FROM {table} WHERE foo = ? AND bob = ?', array( 'bar' , 'tom' ));
+$result = $DB->get_records_sql(
+  'SELECT DATE(from_unixtime(created)) AS date, COUNT(*)
+  FROM {forum_posts}
+  WHERE foo = ?
+  AND bob = ?',
+
+  array(
+    'bar' ,
+    'tom'
+  ));
 /*
 SELECT DATE(from_unixtime(created)) AS date, COUNT(*)
 FROM prefix_forum_posts
@@ -43,7 +55,7 @@ ORDER BY created
 
 
 echo '<pre>';
-var_dump($stuff);
+var_dump($result);
 echo '</pre>';
 
 //$table = new html_table();
