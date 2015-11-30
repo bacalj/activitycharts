@@ -28,10 +28,19 @@ echo $OUTPUT->heading(get_string('activitycharts', 'report_activitycharts'));
 <?php
 
 
-//global $DB;
+global $DB;
 $stuff      = $DB->get_record_sql('SELECT * FROM {user} WHERE id=?', array(2));
-//$otherstuff = $DB->count_records_sql($sql, array $params=null) 
-  /// Get the result of an SQL SELECT COUNT(...) query.
+
+//see if you can use below syntax with the query in the comments
+//$result = $DB->get_records_sql('SELECT * FROM {table} WHERE foo = ? AND bob = ?', array( 'bar' , 'tom' ));
+/*
+SELECT DATE(from_unixtime(created)) AS date, COUNT(*)
+FROM prefix_forum_posts
+WHERE created BETWEEN :date_start AND :date_end
+GROUP BY DATE(from_unixtime(created))
+ORDER BY created
+*/
+
 
 echo '<pre>';
 var_dump($stuff);
