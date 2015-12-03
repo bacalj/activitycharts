@@ -27,37 +27,34 @@ echo $OUTPUT->heading(get_string('activitycharts', 'report_activitycharts'));
 
 
 <?php
-
-
-global $DB;
-
-//works, but just a test
-//$stuff      = $DB->get_record_sql('SELECT * FROM {user} WHERE id=?', array(2));
-
-//see if you can use below syntax with the query in the comments
-$result = $DB->get_records_sql(
-  'SELECT DATE(from_unixtime(created)) AS date, COUNT(*)
-  FROM {forum_posts}
-  WHERE foo = ?
-  AND bob = ?',
-
-  array(
-    'bar' ,
-    'tom'
-  ));
-/*
-SELECT DATE(from_unixtime(created)) AS date, COUNT(*)
-FROM prefix_forum_posts
-WHERE created BETWEEN :date_start AND :date_end
-GROUP BY DATE(from_unixtime(created))
-ORDER BY created
-*/
-
-
+// - - - - - - - - - - - - -
 echo '<pre>';
-var_dump($result);
+
+  global $DB;
+
+  // ----  works, get the user with the id of two using sql
+  $stuff      = $DB->get_records_sql('SELECT id, email FROM {user} WHERE id=?', array( 2, 3 ));
+  var_dump($stuff);
+
+
+  //---- works, get the logstore records (using the recordset function) where the action is created
+  $creationEvents = $DB->get_recordset(
+    'logstore_standard_log', //the table
+    array(
+      'action' => 'created' //the conditions
+  ));
+
+  foreach ($creationEvents as $e) {
+     var_dump($e->eventname);
+  }
+
+  $creationEvents->close();
+
+
 echo '</pre>';
 
+
+// - - - - - - - - - - - - - -
 //$table = new html_table();
 //echo html_writer::table($table);
 echo $OUTPUT->footer();
