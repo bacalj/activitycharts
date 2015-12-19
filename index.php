@@ -48,7 +48,9 @@ echo '<pre>';
   ));
 
   foreach ($creationEvents as $e) {
-     var_dump($e->timecreated);
+     $dateCreated = ($e->timecreated);
+     $dt = new DateTime('@' . $dateCreated);  // convert UNIX timestamp to PHP DateTime
+     echo $dt->format('Y-m-d') . '<br>'; // output = 2012-08-15 00:00:00
   }
 
   $creationEvents->close();
