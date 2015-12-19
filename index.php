@@ -27,25 +27,28 @@ echo $OUTPUT->heading(get_string('activitycharts', 'report_activitycharts'));
 
 
 <?php
+
+
+
+
+
 // - - - - - - - - - - - - -
 echo '<pre>';
 
   global $DB;
 
-  // ----  works, get the user with the id of two using sql
-  $stuff      = $DB->get_records_sql('SELECT id, email FROM {user} WHERE id=?', array( 2, 3 ));
-  var_dump($stuff);
+  //get todays date
 
 
-  //---- works, get the logstore records (using the recordset function) where the action is created
+  // works, get the logstore records (using the recordset function) where the action is created
   $creationEvents = $DB->get_recordset(
     'logstore_standard_log', //the table
     array(
-      'action' => 'created' //the conditions
+      'eventname' => '\core\event\user_loggedinas' //the conditions
   ));
 
   foreach ($creationEvents as $e) {
-     var_dump($e->eventname);
+     var_dump($e->timecreated);
   }
 
   $creationEvents->close();
