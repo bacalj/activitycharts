@@ -37,28 +37,44 @@ echo '<pre>';
 
   global $DB;
 
-  $fromADate = $DB->count_records('logstore_standard_log', array(
-    'eventname' => '\core\event\user_loggedinas',
-  ));
-  //get todays date
+  $dates = array();
+  $params = array(
+    'eventname' => '\core\event\user_loggedinas'
+  );
 
-
-  // works, get the logstore records (using the recordset function) where the action is created
-  $loggedInAsEvents = $DB->get_recordset(
-    'logstore_standard_log', //the table
-    array(
-      'eventname' => '\core\event\user_loggedinas' //the conditions
-  ));
+  $loggedInAsEvents = $DB->get_records('logstore_standard_log', $params);
 
   foreach ($loggedInAsEvents as $e) {
      $dateCreated = ($e->timecreated);
      $dt = new DateTime('@' . $dateCreated);
      echo $dt->format('Y-m-d') . '<br>';
-     echo $e->other;
      //var_dump($e);
   }
 
-  $creationEvents->close();
+  $loggedInAsEvents->close();
+
+  // $fromADate = $DB->count_records('logstore_standard_log', array(
+  //   'eventname' => '\core\event\user_loggedinas',
+  // ));
+  // //get todays date
+  //
+  //
+  // // works, get the logstore records (using the recordset function) where the action is created
+  // $loggedInAsEvents = $DB->get_recordset(
+  //   'logstore_standard_log', //the table
+  //   array(
+  //     'eventname' => '\core\event\user_loggedinas' //the conditions
+  // ));
+  //
+  // foreach ($loggedInAsEvents as $e) {
+  //    $dateCreated = ($e->timecreated);
+  //    $dt = new DateTime('@' . $dateCreated);
+  //    echo $dt->format('Y-m-d') . '<br>';
+  //    echo $e->other;
+  //    //var_dump($e);
+  // }
+  //
+  // $creationEvents->close();
 
 
 echo '</pre>';
