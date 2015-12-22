@@ -37,20 +37,25 @@ echo '<pre>';
 
   global $DB;
 
+  $fromADate = $DB->count_records('logstore_standard_log', array(
+    'eventname' => '\core\event\user_loggedinas',
+  ));
   //get todays date
 
 
   // works, get the logstore records (using the recordset function) where the action is created
-  $creationEvents = $DB->get_recordset(
+  $loggedInAsEvents = $DB->get_recordset(
     'logstore_standard_log', //the table
     array(
       'eventname' => '\core\event\user_loggedinas' //the conditions
   ));
 
-  foreach ($creationEvents as $e) {
+  foreach ($loggedInAsEvents as $e) {
      $dateCreated = ($e->timecreated);
-     $dt = new DateTime('@' . $dateCreated);  // convert UNIX timestamp to PHP DateTime
-     echo $dt->format('Y-m-d') . '<br>'; // output = 2012-08-15 00:00:00
+     $dt = new DateTime('@' . $dateCreated);
+     echo $dt->format('Y-m-d') . '<br>';
+     echo $e->other;
+     //var_dump($e);
   }
 
   $creationEvents->close();
