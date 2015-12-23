@@ -42,7 +42,7 @@ echo '<pre>';
 global $DB;
 
 //get start and end date, eventually from a form
-$start_date = '2015-12-01';
+$start_date = '2015-12-20';
 $end_date = '2015-12-25';
 $event_to_count = '\core\event\user_loggedinas';
 
@@ -67,25 +67,22 @@ foreach ($days as $day) {
 $counts = array();
 
 foreach ($dates as $date){
-    $unixdate = strtotime($date);
-    var_dump($unixdate);
 
-    // $this_params = array(
-    //   'eventname' => $event_to_count,
-    //   'timecreated' => $unixdate
-    // );
+  $sql =  "SELECT * FROM {logstore_standard_log}";
+  $sql .= " WHERE timecreated > :timestart";
+  $sql .= " AND eventname = :whichevent";
 
-    //$this_count = $DB->count_records('logstore_standard_log', $this_params);
+  $params = array(
+    'timestart' => strtotime($date),
+    'whichevent' => $event_to_count
+  );
 
-    ///Get all records where jon = 'doe' and bob is not = 'tom'
-    ///The 'select' parameter is (if not empty) is dropped directly into the WHERE clause without alteration.
-    // $table = 'foo';
-    // $select = "jon = 'doe' AND bob <> 'tom'"; //is put into the where clause
-    // $result = $DB->get_records_select($table,$select);
-    var_dump($this_count);
+  $counted = $DB->get_recordset_sql($sql, $params);
+  echo 'this is a DATE followed by a recrodset object';
+  var_dump($counted);
 }
 
-//map the dates to the counts
+//map the dates to the counts with array_map
 
 
 
