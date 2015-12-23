@@ -42,8 +42,8 @@ echo '<pre>';
 global $DB;
 
 //get start and end date, eventually from a form
-$start_date = '2015-12-20';
-$end_date = '2015-12-25';
+$start_date = '2015-09-01';
+$end_date = '2015-12-31';
 $event_to_count = '\core\event\user_loggedinas';
 
 //get a period object for the timespan
@@ -67,20 +67,33 @@ foreach ($days as $day) {
 $counts = array();
 
 foreach ($dates as $date){
-
+  echo "hi 1";
+  $dateObj = new DateTime($date);
+  $forNext = new DateTime($date);
+  $forNext->add(new DateInterval('P1D'));
+  //var_dump($dateObj->getTimestamp());
+  echo 'hi 2';
   $sql =  "SELECT * FROM {logstore_standard_log}";
-  $sql .= " WHERE timecreated > :timestart";
+  $sql .= " WHERE timecreated > :daystarts";
+  $sql .= " AND timecreated < :dayends";
   $sql .= " AND eventname = :whichevent";
 
   $params = array(
-    'timestart' => strtotime($date),
+    'daystarts' => $dateObj->getTimestamp(),
+    'dayends' => $forNext->getTimestamp(),
     'whichevent' => $event_to_count
   );
 
-  $counted = $DB->get_recordset_sql($sql, $params);
-  echo 'this is a DATE followed by a recrodset object';
+  $counted = $DB->get_records_sql($sql, $params);
+  //echo '----<br>';
+  echo 'here is what we have for DATE: ' . $date . '<br>';
   var_dump($counted);
+  //var_dump($counted);
+  //$class_methods = get_class_methods($counted);
+  //var_dump($class_methods);
+  $counted->close();
 }
+
 
 //map the dates to the counts with array_map
 
