@@ -15,7 +15,8 @@ require_once($CFG->libdir.'/adminlib.php');
 admin_externalpage_setup('reportactivitycharts', '', null, '', array('pagelayout'=>'report'));
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('activitycharts', 'report_activitycharts'));
-
+// $select = html_select::make(array('1' => 'Value 1', '2' => 'Value 2'), 'choice1', '2'));
+// echo $OUTPUT->select($select);
 ?>
 
 <?php //certainly not the moodle way to do this part, but will work for now ?>
@@ -23,9 +24,11 @@ echo $OUTPUT->heading(get_string('activitycharts', 'report_activitycharts'));
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/data.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script> -->
-
-
 <?php
+
+
+
+
 
 echo '<pre>';
 
@@ -49,8 +52,8 @@ $days = iterator_to_array($timespan);
 //set up an empty array for our date list, then push dates into it
 $dates = array();
 foreach ($days as $day) {
-  $dateString = $day->format('Y-m-d');
-  array_push($dates, $dateString);
+  $date_string = $day->format('Y-m-d');
+  array_push($dates, $date_string);
 }
 
 //set up an empty array for counts, then put counts into it
@@ -72,19 +75,23 @@ foreach ($dates as $date){
   $sql .= " AND eventname = :whichevent";
 
 
-  $allForDay = $DB->get_records_sql($sql, $params);
+  $all_for_day = $DB->get_records_sql($sql, $params);
   //echo $date . ': ' .count($allForDay) . ' events<br>';
-  array_push($counts, count($allForDay));
+  array_push($counts, count($all_for_day));
 
 }
 
 //map the dates to the counts
-$datesCounts = array_combine($dates, $counts);
-var_dump($datesCounts);
+$dates_counts = array_combine($dates, $counts);
+var_dump($dates_counts);
 
 
 echo '</pre>';
 
+// $table = new html_table();
+// $table->head = array('Date', $event_to_count);
+// $table->data = array($dates, $counts);
+// echo html_writer::table($table);
 
 // - - - - - - - - - - - - - -
 //$table = new html_table();
