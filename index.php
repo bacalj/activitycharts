@@ -83,13 +83,9 @@ foreach ($dates as $date){
 
 
   $allForDay = $DB->get_records_sql($sql, $params);
+  echo $date . ': ' .count($allForDay) . ' events<br>';
 
-  echo 'DATE: ' . $date . '<br>';
-  $countof = count($allForDay);
-  var_dump($countof);
-  echo '<br>';
 }
-
 
 //map the dates to the counts with array_map
 
