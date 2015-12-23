@@ -67,31 +67,27 @@ foreach ($days as $day) {
 $counts = array();
 
 foreach ($dates as $date){
-  echo "hi 1";
-  $dateObj = new DateTime($date);
-  $forNext = new DateTime($date);
-  $forNext->add(new DateInterval('P1D'));
-  //var_dump($dateObj->getTimestamp());
-  echo 'hi 2';
+
+  $next_date = date('Y-m-d', strtotime($date .  "+1 day"));
+
+  $params = array(
+    'daystarts' => strtotime($date),
+    'dayends' => strtotime($next_date),
+    'whichevent' => $event_to_count
+  );
+
   $sql =  "SELECT * FROM {logstore_standard_log}";
   $sql .= " WHERE timecreated > :daystarts";
   $sql .= " AND timecreated < :dayends";
   $sql .= " AND eventname = :whichevent";
 
-  $params = array(
-    'daystarts' => $dateObj->getTimestamp(),
-    'dayends' => $forNext->getTimestamp(),
-    'whichevent' => $event_to_count
-  );
 
-  $counted = $DB->get_records_sql($sql, $params);
-  //echo '----<br>';
-  echo 'here is what we have for DATE: ' . $date . '<br>';
-  var_dump($counted);
-  //var_dump($counted);
-  //$class_methods = get_class_methods($counted);
-  //var_dump($class_methods);
-  $counted->close();
+  $allForDay = $DB->get_records_sql($sql, $params);
+
+  echo 'DATE: ' . $date . '<br>';
+  $countof = count($allForDay);
+  var_dump($countof);
+  echo '<br>';
 }
 
 
