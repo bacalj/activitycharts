@@ -27,16 +27,6 @@ echo $OUTPUT->heading(get_string('activitycharts', 'report_activitycharts'));
 
 <?php
 
-// - - - - - - - - - - - - -
-// echo 'Our goal is to get a daily count, for all days, whether they have data or not, of how many loggged-in-as events there were';
-// echo '<br>';
-// echo 'we will need to create an array with date => count';
-// echo '<br>';
-// echo 'it will need ALL dates, so some are date => 0';
-//
-// - - - - - - - - - - - - -
-
-
 echo '<pre>';
 
 global $DB;
@@ -83,12 +73,14 @@ foreach ($dates as $date){
 
 
   $allForDay = $DB->get_records_sql($sql, $params);
-  echo $date . ': ' .count($allForDay) . ' events<br>';
+  //echo $date . ': ' .count($allForDay) . ' events<br>';
+  array_push($counts, count($allForDay));
 
 }
 
-//map the dates to the counts with array_map
-
+//map the dates to the counts
+$datesCounts = array_combine($dates, $counts);
+var_dump($datesCounts);
 
 
 echo '</pre>';
