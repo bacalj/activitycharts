@@ -5,7 +5,7 @@
  *
  * @package    report
  * @subpackage activitycharts
- * @copyright  2015 Joe Bacal
+ * @copyright  2016 Joe Bacal
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -14,67 +14,79 @@ require_once($CFG->libdir.'/adminlib.php');
 
 admin_externalpage_setup('reportactivitycharts', '', null, '', array('pagelayout'=>'report'));
 echo $OUTPUT->header();
-
 echo $OUTPUT->heading(get_string('activitycharts', 'report_activitycharts'));
 
 ?>
 
 <?php //certainly not the moodle way to do this part, but will work for now ?>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/data.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script> -->
 
 
 <?php
 
-
-
-
-
 // - - - - - - - - - - - - -
+// echo 'Our goal is to get a daily count, for all days, whether they have data or not, of how many loggged-in-as events there were';
+// echo '<br>';
+// echo 'we will need to create an array with date => count';
+// echo '<br>';
+// echo 'it will need ALL dates, so some are date => 0';
+//
+// - - - - - - - - - - - - -
+
+
 echo '<pre>';
 
-  global $DB;
+global $DB;
 
-  $dates = array();
-  $params = array(
-    'eventname' => '\core\event\user_loggedinas'
-  );
+//get start and end date, eventually from a form
+$start_date = '2015-12-01';
+$end_date = '2015-12-25';
+$event_to_count = '\core\event\user_loggedinas';
 
-  $loggedInAsEvents = $DB->get_records('logstore_standard_log', $params);
+//get a period object for the timespan
+$timespan = new DatePeriod(
+     new DateTime($start_date),
+     new DateInterval('P1D'),
+     new DateTime($end_date)
+);
 
-  foreach ($loggedInAsEvents as $e) {
-     $dateCreated = ($e->timecreated);
-     $dt = new DateTime('@' . $dateCreated);
-     echo $dt->format('Y-m-d') . '<br>';
-     //var_dump($e);
-  }
+//turn it into an array
+$days = iterator_to_array($timespan);
 
-  $loggedInAsEvents->close();
+//set up an empty array for our date list, then push dates into it
+$dates = array();
+foreach ($days as $day) {
+  $dateString = $day->format('Y-m-d');
+  array_push($dates, $dateString);
+}
 
-  // $fromADate = $DB->count_records('logstore_standard_log', array(
-  //   'eventname' => '\core\event\user_loggedinas',
-  // ));
-  // //get todays date
-  //
-  //
-  // // works, get the logstore records (using the recordset function) where the action is created
-  // $loggedInAsEvents = $DB->get_recordset(
-  //   'logstore_standard_log', //the table
-  //   array(
-  //     'eventname' => '\core\event\user_loggedinas' //the conditions
-  // ));
-  //
-  // foreach ($loggedInAsEvents as $e) {
-  //    $dateCreated = ($e->timecreated);
-  //    $dt = new DateTime('@' . $dateCreated);
-  //    echo $dt->format('Y-m-d') . '<br>';
-  //    echo $e->other;
-  //    //var_dump($e);
-  // }
-  //
-  // $creationEvents->close();
+//set up an empty array for counts, then put counts into it
+$counts = array();
+
+foreach ($dates as $date){
+    $unixdate = strtotime($date);
+    var_dump($unixdate);
+
+    // $this_params = array(
+    //   'eventname' => $event_to_count,
+    //   'timecreated' => $unixdate
+    // );
+
+    //$this_count = $DB->count_records('logstore_standard_log', $this_params);
+
+    ///Get all records where jon = 'doe' and bob is not = 'tom'
+    ///The 'select' parameter is (if not empty) is dropped directly into the WHERE clause without alteration.
+    // $table = 'foo';
+    // $select = "jon = 'doe' AND bob <> 'tom'"; //is put into the where clause
+    // $result = $DB->get_records_select($table,$select);
+    var_dump($this_count);
+}
+
+//map the dates to the counts
+
 
 
 echo '</pre>';
