@@ -15,20 +15,14 @@ require_once($CFG->libdir.'/adminlib.php');
 admin_externalpage_setup('reportactivitycharts', '', null, '', array('pagelayout'=>'report'));
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('activitycharts', 'report_activitycharts'));
-// $select = html_select::make(array('1' => 'Value 1', '2' => 'Value 2'), 'choice1', '2'));
-// echo $OUTPUT->select($select);
-?>
 
-<?php //certainly not the moodle way to do this part, but will work for now ?>
-<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+//certainly not the moodle way to do this part, but will work for now ?>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/data.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script> -->
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+
 <?php
-
-
-
-
 
 echo '<pre>';
 
@@ -83,17 +77,61 @@ foreach ($dates as $date){
 
 //map the dates to the counts
 $dates_counts = array_combine($dates, $counts);
-var_dump($dates_counts);
 
+echo '</pre>'; ?>
 
-echo '</pre>';
+<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
-// $table = new html_table();
-// $table->head = array('Date', $event_to_count);
-// $table->data = array($dates, $counts);
-// echo html_writer::table($table);
+<table id="datatable">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Count< of event</th>
+        </tr>
+    </thead>
+    <tbody>
 
-// - - - - - - - - - - - - - -
-//$table = new html_table();
-//echo html_writer::table($table);
+        <?php foreach ($dates_counts as $the_date => $the_count) {
+          echo '<tr>';
+          echo '<td>' . $the_date . '</td>';
+          echo '<td>' . $the_count . '</td>';
+          echo '</tr>';
+        } ?>
+
+    </tbody>
+</table>
+<?php
+
 echo $OUTPUT->footer();
+
+?>
+
+<script type="text/javascript">
+$(function () {
+    $('#container').highcharts({
+        data: {
+            table: 'datatable'
+        },
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Data extracted from a HTML table in the page'
+        },
+        yAxis: {
+            allowDecimals: false,
+            title: {
+                text: 'Units'
+            }
+        },
+        tooltip: {
+            formatter: function () {
+                return '<b>' + this.series.name + '</b><br/>' +
+                    this.point.y + ' ' + this.point.name.toLowerCase();
+            }
+        }
+    });
+});
+
+
+</script>
