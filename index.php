@@ -16,11 +16,17 @@ admin_externalpage_setup('reportactivitycharts', '', null, '', array('pagelayout
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('activitycharts', 'report_activitycharts'));
 
-//certainly not the moodle way to do this part, but will work for now ?>
+?>
+<!-- certainly not the moodle way to do this part, but will work for now 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/data.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script> -->
+
+<script src="highcharts/jquery.min.js"></script>
+<script src="highcharts/highcharts.js"></script>
+<script src="highcharts/data.js"></script>
+<script src="highcharts/exporting.js"></script>
 
 <?php
 
