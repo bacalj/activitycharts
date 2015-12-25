@@ -9,35 +9,36 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+ ?>
+
+ <script src="highcharts/jquery.min.js"></script>
+ <script src="highcharts/highcharts.js"></script>
+ <script src="highcharts/data.js"></script>
+ <script src="highcharts/exporting.js"></script>
+
+ <?php
+
 require(dirname(__FILE__).'/../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 
+//set up stuff
 admin_externalpage_setup('reportactivitycharts', '', null, '', array('pagelayout'=>'report'));
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('activitycharts', 'report_activitycharts'));
 
-?>
-<!-- certainly not the moodle way to do this part, but will work for now 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/modules/data.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script> -->
 
-<script src="highcharts/jquery.min.js"></script>
-<script src="highcharts/highcharts.js"></script>
-<script src="highcharts/data.js"></script>
-<script src="highcharts/exporting.js"></script>
-
-<?php
-
-echo '<pre>';
-
+//get ready to get at the database
 global $DB;
 
+//get a list of all possible events
+
+
+//populate selection form with those events
+
 //get start and end date, eventually from a form
-$start_date = '2015-09-01';
+$start_date = '2015-07-01';
 $end_date = '2015-12-31';
-$event_to_count = '\core\event\user_loggedinas';
+$event_to_count = '\core\event\user_loggedin';
 
 //get a period object for the timespan
 $timespan = new DatePeriod(
@@ -74,9 +75,7 @@ foreach ($dates as $date){
   $sql .= " AND timecreated < :dayends";
   $sql .= " AND eventname = :whichevent";
 
-
   $all_for_day = $DB->get_records_sql($sql, $params);
-  //echo $date . ': ' .count($allForDay) . ' events<br>';
   array_push($counts, count($all_for_day));
 
 }
@@ -84,11 +83,11 @@ foreach ($dates as $date){
 //map the dates to the counts
 $dates_counts = array_combine($dates, $counts);
 
-echo '</pre>'; ?>
+?>
 
 <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
-<table id="datatable">
+<table id="datatable" style="position:absolute;left:-999px; width:300px;">
     <thead>
         <tr>
             <th>Date</th>
@@ -96,48 +95,40 @@ echo '</pre>'; ?>
         </tr>
     </thead>
     <tbody>
-
         <?php foreach ($dates_counts as $the_date => $the_count) {
-          echo '<tr>';
-          echo '<td>' . $the_date . '</td>';
-          echo '<td>' . $the_count . '</td>';
-          echo '</tr>';
+          echo '<tr><td>'. $the_date . '</td><td>' . $the_count . '</td></tr>';
         } ?>
-
     </tbody>
 </table>
-<?php
-
-echo $OUTPUT->footer();
-
-?>
 
 <script type="text/javascript">
-$(function () {
-    $('#container').highcharts({
-        data: {
-            table: 'datatable'
-        },
-        chart: {
-            type: 'column'
-        },
-        title: {
-            text: 'Data extracted from a HTML table in the page'
-        },
-        yAxis: {
-            allowDecimals: false,
-            title: {
-                text: 'Units'
-            }
-        },
-        tooltip: {
-            formatter: function () {
-                return '<b>' + this.series.name + '</b><br/>' +
-                    this.point.y + ' ' + this.point.name.toLowerCase();
-            }
-        }
-    });
-});
 
+  $(function () {
+      $('#container').highcharts({
+          data: {
+              table: 'datatable'
+          },
+          chart: {
+              type: 'column'
+          },
+          title: {
+              text: '<?php echo 'some text'; ?>'
+          },
+          yAxis: {
+              allowDecimals: false,
+              title: {
+                  text: 'Units'
+              }
+          },
+          tooltip: {
+              formatter: function () {
+                  return '<b>' + this.series.name + '</b><br/>' +
+                      this.point.y + ' ' + this.point.name.toLowerCase();
+              }
+          }
+      });
+  });
 
 </script>
+
+<?php echo $OUTPUT->footer(); ?>
