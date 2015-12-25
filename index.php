@@ -35,10 +35,43 @@ global $DB;
 
 //populate selection form with those events
 
+	// $faculty_or_staff = Roots\Sage\Utils\fac_or_staff();
+	// $tags = get_terms('person_tag');
+	// $placeText = 'placeholder="Search..."';
+	// $searchInputVal = 'value="' . $_GET['search-filter'] . '"';
+	// $attrs = (strlen($_GET['search-filter']) < 1 ) ?  $placeText : $searchInputVal;
+?>
+
+<form method="get" id="chart-params-form">
+	<select name="which-event-dropdown" id="which-event-dropdown">
+
+    <option value="\core\event\user_loggedin">
+      choose an event
+    </option>
+
+		<option value="\core\event\user_loggedin">
+			\core\event\user_loggedin
+		</option>
+
+		<option value="\core\event\user_loggedinas">
+			\core\event\user_loggedinas
+		</option>
+
+	</select><br>
+
+  input dates like this: 2015-09-28<br>
+  <input type="text" name="startdate" value="enter a start date">
+
+  <input type="text" name="enddate" value="enter an end date">
+
+	<input type="submit" id="which-event-submit">
+</form>
+
+<?php
 //get start and end date, eventually from a form
-$start_date = '2015-07-01';
-$end_date = '2015-12-31';
-$event_to_count = '\core\event\user_loggedin';
+$start_date = $_GET['startdate'];
+$end_date = $_GET['enddate'];
+$event_to_count = $_GET['which-event-dropdown'];
 
 //get a period object for the timespan
 $timespan = new DatePeriod(
@@ -104,6 +137,9 @@ $dates_counts = array_combine($dates, $counts);
 <script type="text/javascript">
 
   $(function () {
+
+      var counted = <?php echo json_encode($event_to_count); ?>;
+
       $('#container').highcharts({
           data: {
               table: 'datatable'
@@ -112,12 +148,12 @@ $dates_counts = array_combine($dates, $counts);
               type: 'column'
           },
           title: {
-              text: '<?php echo 'some text'; ?>'
+              text: counted
           },
           yAxis: {
               allowDecimals: false,
               title: {
-                  text: 'Units'
+                  text: 'count per day'
               }
           },
           tooltip: {
