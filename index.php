@@ -45,25 +45,23 @@ global $DB;
 <form method="get" id="chart-params-form">
 	<select name="which-event-dropdown" id="which-event-dropdown">
 
-    <option value="\core\event\user_loggedin">
+    <option value="choose an event">
       choose an event
     </option>
 
 		<option value="\core\event\user_loggedin">
-			\core\event\user_loggedin
+			User logins
 		</option>
 
 		<option value="\core\event\user_loggedinas">
-			\core\event\user_loggedinas
+			Logged in as
 		</option>
 
 	</select><br>
 
-  input dates like this: 2015-09-28<br>
-  <input type="text" name="startdate" value="enter a start date">
-
-  <input type="text" name="enddate" value="enter an end date">
-
+  <i>input dates like this: 2015-09-28</i><br>
+  <input type="text" name="startdate" value="2015-08-01">
+  <input type="text" name="enddate" value="2015-12-31">
 	<input type="submit" id="which-event-submit">
 </form>
 
@@ -124,7 +122,7 @@ $dates_counts = array_combine($dates, $counts);
     <thead>
         <tr>
             <th>Date</th>
-            <th>Count< of event</th>
+            <th><?php echo $event_to_count; ?> per day</th>
         </tr>
     </thead>
     <tbody>
@@ -138,7 +136,9 @@ $dates_counts = array_combine($dates, $counts);
 
   $(function () {
 
-      var counted = <?php echo json_encode($event_to_count); ?>;
+      var counted = <?php echo json_encode($event_to_count);?>;
+      var startDate = <?php echo json_encode($start_date);?>;
+      var endDate = <?php echo json_encode($end_date); ?>;
 
       $('#container').highcharts({
           data: {
@@ -148,7 +148,7 @@ $dates_counts = array_combine($dates, $counts);
               type: 'column'
           },
           title: {
-              text: counted
+              text: counted + ":<br>" + startDate + " to " + endDate
           },
           yAxis: {
               allowDecimals: false,
@@ -156,12 +156,20 @@ $dates_counts = array_combine($dates, $counts);
                   text: 'count per day'
               }
           },
-          tooltip: {
-              formatter: function () {
-                  return '<b>' + this.series.name + '</b><br/>' +
-                      this.point.y + ' ' + this.point.name.toLowerCase();
-              }
-          }
+
+          xAxis: {
+     			 type: 'datetime',
+     			 labels: {
+     			 	formatter: function(){
+     			 		var dt = new Date(this.value);
+     			 		var shrt = dt.toString().substring(0,15);
+     			 		return shrt;
+     			 	},
+
+     			 	rotation: -40
+     			 }
+    		}
+
       });
   });
 
