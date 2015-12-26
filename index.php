@@ -31,15 +31,13 @@ echo $OUTPUT->heading(get_string('activitycharts', 'report_activitycharts'));
 global $DB;
 
 //get a list of all possible events
+$events_list = $DB->get_records_sql('SELECT DISTINCT eventname FROM {logstore_standard_log}');
 
-
-//populate selection form with those events
-
-	// $faculty_or_staff = Roots\Sage\Utils\fac_or_staff();
-	// $tags = get_terms('person_tag');
-	// $placeText = 'placeholder="Search..."';
-	// $searchInputVal = 'value="' . $_GET['search-filter'] . '"';
-	// $attrs = (strlen($_GET['search-filter']) < 1 ) ?  $placeText : $searchInputVal;
+echo '<pre>';
+foreach ($events_list as $strkey => $obj) {
+  var_dump($strkey);
+} 
+echo '</pre>';
 ?>
 
 <form method="get" id="chart-params-form">
@@ -155,6 +153,10 @@ $dates_counts = array_combine($dates, $counts);
               title: {
                   text: 'count per day'
               }
+          },
+
+          tooltip: {
+            enabled: true
           },
 
           xAxis: {
