@@ -9,65 +9,21 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
- ?>
-
- <script src="highcharts/jquery.min.js"></script>
- <script src="highcharts/highcharts.js"></script>
- <script src="highcharts/data.js"></script>
- <script src="highcharts/exporting.js"></script>
-
- <?php
-
 require(dirname(__FILE__).'/../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 
-//set up stuff
 admin_externalpage_setup('reportactivitycharts', '', null, '', array('pagelayout'=>'report'));
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('activitycharts', 'report_activitycharts'));
 
+$event_to_count = $_GET['event-dropdown'] == null ? '\core\event\user_loggedin' : $_GET['event-dropdown'];
+$start_date = $_GET['event-dropdown'] == null ? '2015-09-01' : $_GET['startdate'];
+$end_date = $_GET['event-dropdown'] == null ? '2015-09-03' : $_GET['enddate'];
 
-//get ready to get at the database
 global $DB;
 
 //get a list of all possible events
 $events_list = $DB->get_records_sql('SELECT DISTINCT eventname FROM {logstore_standard_log}');
-
-echo '<pre>';
-foreach ($events_list as $strkey => $obj) {
-  var_dump($strkey);
-} 
-echo '</pre>';
-?>
-
-<form method="get" id="chart-params-form">
-	<select name="which-event-dropdown" id="which-event-dropdown">
-
-    <option value="choose an event">
-      choose an event
-    </option>
-
-		<option value="\core\event\user_loggedin">
-			User logins
-		</option>
-
-		<option value="\core\event\user_loggedinas">
-			Logged in as
-		</option>
-
-	</select><br>
-
-  <i>input dates like this: 2015-09-28</i><br>
-  <input type="text" name="startdate" value="2015-08-01">
-  <input type="text" name="enddate" value="2015-12-31">
-	<input type="submit" id="which-event-submit">
-</form>
-
-<?php
-//get start and end date, eventually from a form
-$start_date = $_GET['startdate'];
-$end_date = $_GET['enddate'];
-$event_to_count = $_GET['which-event-dropdown'];
 
 //get a period object for the timespan
 $timespan = new DatePeriod(
@@ -114,6 +70,25 @@ $dates_counts = array_combine($dates, $counts);
 
 ?>
 
+<form method="get" id="chart-params-form">
+	<select name="event-dropdown" id="event-dropdown">
+
+    <option value="<?php echo $event_to_count; ?>">
+      <?php echo $event_to_count; ?>
+    </option>
+
+    <?php foreach ($events_list as $strkey => $obj) {
+      echo '<option value="' . $strkey .'">' . $strkey . '</option>';
+    } ?>
+
+	</select><br>
+
+  <i>input dates like this: 2015-09-28</i><br>
+  <input type="text" name="startdate" value="<?php echo $_GET['startdate']; ?>">
+  <input type="text" name="enddate" value="<?php echo $_GET['enddate']; ?>">
+	<input type="submit" id="event-submit">
+</form>
+
 <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
 <table id="datatable" style="position:absolute;left:-999px; width:300px;">
@@ -129,6 +104,11 @@ $dates_counts = array_combine($dates, $counts);
         } ?>
     </tbody>
 </table>
+
+<script src="highcharts/jquery.min.js"></script>
+<script src="highcharts/highcharts.js"></script>
+<script src="highcharts/data.js"></script>
+<script src="highcharts/exporting.js"></script>
 
 <script type="text/javascript">
 
