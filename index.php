@@ -5,7 +5,7 @@
  *
  * @package    report
  * @subpackage activitycharts
- * @copyright  2016 Joe Bacal
+ * @copyright  2015 Joe Bacal
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
