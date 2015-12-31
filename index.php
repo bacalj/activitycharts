@@ -5,16 +5,19 @@
  *
  * @package    report
  * @subpackage activitycharts
- * @copyright  2015 Joe Bacal
+ * @copyright  2016 Joe Bacal
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 require(dirname(__FILE__).'/../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 
+
 admin_externalpage_setup('reportactivitycharts', '', null, '', array('pagelayout'=>'report'));
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('activitycharts', 'report_activitycharts'));
+
+include('moodlehighchart.php');
 
 $event_to_count = $_GET['event-dropdown'] == null ? '\core\event\user_loggedin' : $_GET['event-dropdown'];
 $start_date = $_GET['event-dropdown'] == null ? '2015-09-01' : $_GET['startdate'];
