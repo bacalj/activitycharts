@@ -18,6 +18,9 @@ echo $OUTPUT->heading(get_string('activitycharts', 'report_activitycharts'));
 
 include('moodlehighchart.php');
 
+$mch = new MoodleHighChart();
+$mch->render_options_list();
+
 // $event_to_count = $_GET['event-dropdown'] == null ? '\core\event\user_loggedin' : $_GET['event-dropdown'];
 // $start_date = $_GET['event-dropdown'] == null ? '2015-09-01' : $_GET['startdate'];
 // $end_date = $_GET['event-dropdown'] == null ? '2015-09-03' : $_GET['enddate'];
