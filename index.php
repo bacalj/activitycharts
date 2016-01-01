@@ -28,13 +28,33 @@ $mch = new MoodleHighChart();
 		<?php $mch->render_options_list(); ?>
 	</select>
 	<?php
-		$mch->set_query_params();
-		$mch->render_date_form();	
+		//$mch->set_query_params();
+		$mch->render_date_form();
 	?>
 </form>
 
-<?php
+<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
+<table id="datatable" style="position:absolute;left:-999px; width:300px;">
+    <thead>
+        <!-- <tr>
+            <th>Date</th>
+            <th><?php //echo $event_to_count; ?> per day</th>
+        </tr> -->
+    </thead>
+    <tbody>
+        <?php //foreach ($dates_counts as $the_date => $the_count) {
+          //echo '<tr><td>'. $the_date . '</td><td>' . $the_count . '</td></tr>';
+        //} ?>
+    </tbody>
+</table>
+
+<pre>
+	<?php $mch->create_all_dates_array(); ?>
+</pre>
+
+
+<?php
 
 // $event_to_count = $_GET['event-dropdown'] == null ? '\core\event\user_loggedin' : $_GET['event-dropdown'];
 // $start_date = $_GET['event-dropdown'] == null ? '2015-09-01' : $_GET['startdate'];
