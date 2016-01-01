@@ -1,13 +1,11 @@
 <?php
 
-echo 'see if i running';
-
 class MoodleHighChart {
 
   public $start_date = '2015-09-01';//date('Y-m-d', strtotime($date .  "-1 month"));
   public $end_date = '2016-01-01';//date('Y-m-d');
   public $event = '\core\event\user_loggedin';
-  public $event_options = array();
+  //public $event_options = array();
 
   public function set_query_params(){
     if ($_GET['startdate'] !== NULL) {
@@ -15,7 +13,7 @@ class MoodleHighChart {
     }
 
     if ($_GET['enddate'] !== NULL) {
-      $this->start_date = ($_GET['enddate']);
+      $this->end_date = ($_GET['enddate']);
     }
 
     if ($_GET['event-dropdown'] !== NULL) {
@@ -24,6 +22,7 @@ class MoodleHighChart {
   }
 
   public function render_options_list(){
+    global $DB;
 
     $this->event_options = $DB->get_records_sql(
       'SELECT DISTINCT eventname FROM {logstore_standard_log}'

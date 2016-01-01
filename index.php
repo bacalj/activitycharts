@@ -18,8 +18,23 @@ echo $OUTPUT->heading(get_string('activitycharts', 'report_activitycharts'));
 
 include('moodlehighchart.php');
 
+global $DB;
 $mch = new MoodleHighChart();
-$mch->render_options_list();
+
+?>
+
+<form method="get" id="chart-params-form">
+	<select name="event-dropdown" id="event-dropdown">
+		<?php $mch->render_options_list(); ?>
+	</select>
+	<?php
+		$mch->set_query_params();
+		$mch->render_date_form();	
+	?>
+</form>
+
+<?php
+
 
 // $event_to_count = $_GET['event-dropdown'] == null ? '\core\event\user_loggedin' : $_GET['event-dropdown'];
 // $start_date = $_GET['event-dropdown'] == null ? '2015-09-01' : $_GET['startdate'];
@@ -75,7 +90,7 @@ $mch->render_options_list();
 
 ?>
 
-<form method="get" id="chart-params-form">
+<!-- <form method="get" id="chart-params-form">
 	<select name="event-dropdown" id="event-dropdown">
 
     <option value="<?php echo $event_to_count; ?>">
@@ -92,11 +107,11 @@ $mch->render_options_list();
   <input type="text" name="startdate" value="<?php echo $_GET['startdate']; ?>">
   <input type="text" name="enddate" value="<?php echo $_GET['enddate']; ?>">
 	<input type="submit" id="event-submit">
-</form>
+</form> -->
 
-<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+<!-- <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div> -->
 
-<table id="datatable" style="position:absolute;left:-999px; width:300px;">
+<!-- <table id="datatable" style="position:absolute;left:-999px; width:300px;">
     <thead>
         <tr>
             <th>Date</th>
@@ -108,9 +123,9 @@ $mch->render_options_list();
           echo '<tr><td>'. $the_date . '</td><td>' . $the_count . '</td></tr>';
         } ?>
     </tbody>
-</table>
+</table> -->
 
-<script src="highcharts/jquery.min.js"></script>
+<!-- <script src="highcharts/jquery.min.js"></script>
 <script src="highcharts/highcharts.js"></script>
 <script src="highcharts/data.js"></script>
 <script src="highcharts/exporting.js"></script>
@@ -164,6 +179,6 @@ $mch->render_options_list();
       });
   });
 
-</script>
+</script> -->
 
 <?php echo $OUTPUT->footer(); ?>
