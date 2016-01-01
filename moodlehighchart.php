@@ -14,7 +14,7 @@ class MoodleHighChart {
     );
 
     echo '<option value="' . $this->event . '">' . $this->event . '</option>';
-    
+
     foreach ($this->event_options as $key => $obj){
       echo '<option value="' . $key .'">' . $key . '</option>';
     }
@@ -70,7 +70,7 @@ class MoodleHighChart {
   public function get_date_counts() {
     global $DB;
 
-    var_dump($this->event);
+    //var_dump($this->event);
 
     $params = array(
       'fromday' => strtotime($this->start_date),
@@ -87,6 +87,6 @@ class MoodleHighChart {
 
     $res = $DB->get_records_sql($sql, $params);
 
-    var_dump($res);
+    var_dump($res . 'wha');
   }
 }
