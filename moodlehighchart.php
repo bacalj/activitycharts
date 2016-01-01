@@ -9,16 +9,12 @@ class MoodleHighChart {
   public function render_options_list(){
     global $DB;
 
-    //this works but is slow so commenting out for debugging
-    // $this->event_options = $DB->get_records_sql(
-    //   'SELECT DISTINCT eventname FROM {logstore_standard_log}'
-    // );
+    $this->event_options = $DB->get_records_sql(
+      'SELECT DISTINCT eventname FROM {logstore_standard_log}'
+    );
 
-    //temportary hard-coded
-    $this->event_options = $event;
-
-    echo '<option value=' . $this->event . '">' . $this->event . '</option>';
-
+    echo '<option value="' . $this->event . '">' . $this->event . '</option>';
+    
     foreach ($this->event_options as $key => $obj){
       echo '<option value="' . $key .'">' . $key . '</option>';
     }
@@ -49,12 +45,48 @@ class MoodleHighChart {
       new DateTime($this->end_date)
     );
 
+    /*
+      reduce our array objects to an array
+      then reduce that to ymd
+      then flip it and zero out the values
+    */
+
     $dates_objects = iterator_to_array($timespan);
 
     $dates = array();
 
-    foreach ($dates_objects as $key => $value) {
-      echo 'h1';
+    foreach ($dates_objects as $d) {
+      $date_string = $d->format('Y-m-d');
+      array_push($dates, $date_string);
     }
+
+    foreach ($dates as $key => $value) {
+      $key = $value;
+    }
+
+    $this->all_dates_array = $dates;
+  }
+
+  public function get_date_counts() {
+    global $DB;
+
+    var_dump($this->event);
+
+    $params = array(
+      'fromday' => strtotime($this->start_date),
+      'thruday' => strtotime($this->end_date),
+      'whichevent' => $this->event
+    );
+
+    var_dump($params);
+
+    $sql =  'SELECT * FROM {logstore_standard_log}';
+    $sql .= ' WHERE timecreated >= :fromday';
+    $sql .= ' AND timecreated <= :thruday';
+    $sql .= ' AND eventname = :whichevent';
+
+    $res = $DB->get_records_sql($sql, $params);
+
+    var_dump($res);
   }
 }
