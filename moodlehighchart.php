@@ -5,6 +5,7 @@ class MoodleHighChart {
   public $start_date = '2015-09-01';//date('Y-m-d', strtotime($date .  "-1 month"));
   public $end_date = '2016-01-01';//date('Y-m-d');
   public $event = '\core\event\user_loggedin';
+  public $dates_counts = array();
 
   public function render_options_list(){
     global $DB;
@@ -75,8 +76,11 @@ class MoodleHighChart {
     }
 
     $this->dates_counts = array_combine($dates, $counts);
+  }
 
-    var_dump($this->dates_counts);
-
+  public function render_records_table_rows(){
+    foreach ($this->dates_counts as $the_date => $the_count) {
+      echo '<tr><td>'. $the_date . '</td><td>' . $the_count . '</td></tr>';
+    }
   }
 }
