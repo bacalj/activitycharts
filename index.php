@@ -50,11 +50,7 @@ $mch = new MoodleHighChart();
 </table>
 
 <pre>
-	<?php
-			$mch->create_all_dates_array();
-			$mch->get_date_counts();
-
-	 ?>
+	<?php $mch->create_all_dates_array(); ?>
 </pre>
 
 

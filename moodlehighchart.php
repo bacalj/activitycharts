@@ -9,7 +9,7 @@ class MoodleHighChart {
   public function render_options_list(){
     global $DB;
 
-    $this->event_options = $DB->get_records_sql(
+    $this->event_options = $DB->get_recordset_sql(
       'SELECT DISTINCT eventname FROM {logstore_standard_log}'
     );
 
@@ -45,48 +45,38 @@ class MoodleHighChart {
       new DateTime($this->end_date)
     );
 
-    /*
-      reduce our array objects to an array
-      then reduce that to ymd
-      then flip it and zero out the values
-    */
-
     $dates_objects = iterator_to_array($timespan);
 
     $dates = array();
-
     foreach ($dates_objects as $d) {
       $date_string = $d->format('Y-m-d');
       array_push($dates, $date_string);
     }
 
-    foreach ($dates as $key => $value) {
-      $key = $value;
+    $counts = array();
+    foreach ($dates as $date) {
+
+      $next_date = date('Y-m-d', strtotime($date .  "+1 day"));
+
+      $params = array(
+        'daystarts' => strtotime($date),
+        'dayends' => strtotime($next_date),
+        'whichevent' => $this->event
+      );
+
+      global $DB;
+      $sql =  "SELECT * FROM {logstore_standard_log}";
+      $sql .= " WHERE timecreated > :daystarts";
+      $sql .= " AND timecreated < :dayends";
+      $sql .= " AND eventname = :whichevent";
+
+      $all_for_day = $DB->get_records_sql($sql, $params);
+      array_push($counts, count($all_for_day));
     }
 
-    $this->all_dates_array = $dates;
-  }
+    $this->dates_counts = array_combine($dates, $counts);
 
-  public function get_date_counts() {
-    global $DB;
+    var_dump($this->dates_counts);
 
-    //var_dump($this->event);
-
-    $params = array(
-      'fromday' => strtotime($this->start_date),
-      'thruday' => strtotime($this->end_date),
-      'whichevent' => $this->event
-    );
-
-    var_dump($params);
-
-    $sql =  'SELECT * FROM {logstore_standard_log}';
-    $sql .= ' WHERE timecreated >= :fromday';
-    $sql .= ' AND timecreated <= :thruday';
-    $sql .= ' AND eventname = :whichevent';
-
-    $res = $DB->get_records_sql($sql, $params);
-
-    var_dump($res . 'wha');
   }
 }
