@@ -80,7 +80,8 @@ class MoodleHighChart {
 
   public function render_records_table_rows(){
     foreach ($this->dates_counts as $the_date => $the_count) {
-      echo '<tr><td>'. $the_date . '</td><td>' . $the_count . '</td></tr>';
+      echo '<tr><td>'. $the_date . '</td>';
+      echo '<td>' . $the_count . '</td></tr>';
     }
   }
 }

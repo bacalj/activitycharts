@@ -13,12 +13,11 @@ require(dirname(__FILE__).'/../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 
 admin_externalpage_setup('reportactivitycharts', '', null, '', array('pagelayout'=>'report'));
+
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('activitycharts', 'report_activitycharts'));
 
 include('moodlehighchart.php');
-
-global $DB;
 $mch = new MoodleHighChart();
 
 ?>
